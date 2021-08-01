@@ -26,12 +26,12 @@ function handleRequest(req, res) {
     }
     if (parseUrl.pathname === '/users' && req.method === 'GET') {
       var userName = parseUrl.query.username;
-      console.log(userName);
-      //   fs.readFile(userPath + userName + '.json', (err, content) => {
-      //     if (err) return console.log(err);
-      //     res.setHeader('Content-Type', 'application/json');
-      //    return res.end(content);
-      //   });
+      console.log(userPath + userName + '.json');
+      fs.readFile(userPath + userName + '.json', (err, content) => {
+        res.setHeader('Content-Type', 'application/json');
+        if (err) return console.log(err);
+        return res.end(content);
+      });
     }
 
     if (parseUrl.pathname === '/users' && req.method === 'PUT') {
@@ -43,7 +43,7 @@ function handleRequest(req, res) {
           fs.writeFile(fd, store, (err) => {
             if (err) return console.log(err);
             fs.close(fd, () => {
-              return res.end(`${username} updated successfully`);
+              return res.end(`${userName} updated successfully`);
             });
           });
         });
@@ -53,11 +53,13 @@ function handleRequest(req, res) {
       var userName = parseUrl.query.username;
       fs.unlink(userPath + userName + '.json', (err) => {
         if (err) return console.log(err);
-        return res.end(`${username} is deleted`);
+        return res.end(`${userName} is deleted`);
       });
     }
-    res.statusCode = 404;
-    res.end('Page Not Found');
+    if (req.url === '*') {
+      res.statusCode = 404;
+      res.end('Page Not Found');
+    }
   });
 }
 
