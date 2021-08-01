@@ -26,7 +26,6 @@ function handleRequest(req, res) {
     }
     if (parseUrl.pathname === '/users' && req.method === 'GET') {
       var userName = parseUrl.query.username;
-      console.log(userPath + userName + '.json');
       fs.readFile(userPath + userName + '.json', (err, content) => {
         res.setHeader('Content-Type', 'application/json');
         if (err) return console.log(err);
